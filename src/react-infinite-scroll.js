@@ -21,6 +21,7 @@ module.exports = function (React) {
       };
     },
     componentDidMount: function () {
+      this.container = document.getElementById(this.props.container);
       this.pageLoaded = this.props.pageStart;
       this.attachScrollListener();
     },
@@ -35,7 +36,12 @@ module.exports = function (React) {
     },
     scrollListener: function () {
       var el = this.getDOMNode();
-      var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+      var scrollTop;
+      if (this.container){
+          scrollTop=this.container.scrollTop;
+      }else{
+          scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+      }
       if (topPosition(el) + el.offsetHeight - scrollTop - window.innerHeight < Number(this.props.threshold)) {
         this.detachScrollListener();
         // call loadMore after detachScrollListener to allow
@@ -47,12 +53,12 @@ module.exports = function (React) {
       if (!this.props.hasMore) {
         return;
       }
-      window.addEventListener('scroll', this.scrollListener);
+      (this.container || window).addEventListener('scroll', this.scrollListener);
       window.addEventListener('resize', this.scrollListener);
       this.scrollListener();
     },
     detachScrollListener: function () {
-      window.removeEventListener('scroll', this.scrollListener);
+      (this.container || window).removeEventListener('scroll', this.scrollListener);
       window.removeEventListener('resize', this.scrollListener);
     },
     componentWillUnmount: function () {
