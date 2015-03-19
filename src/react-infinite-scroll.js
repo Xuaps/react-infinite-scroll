@@ -13,6 +13,7 @@ module.exports = function (React) {
   var InfiniteScroll = React.addons.InfiniteScroll = React.createClass({
     getDefaultProps: function () {
       return {
+        className:'',
         pageStart: 0,
         hasMore: false,
         loadMore: function () {},
@@ -28,7 +29,9 @@ module.exports = function (React) {
     },
     render: function () {
       var props = this.props;
-      return React.DOM.div(null, props.children, props.hasMore && (props.loader || InfiniteScroll._defaultLoader));
+      return React.DOM.div({
+        className: this.props.className
+      }, props.children, props.hasMore && (props.loader || InfiniteScroll._defaultLoader));
     },
     scrollListener: function () {
       var el = this.getDOMNode();
